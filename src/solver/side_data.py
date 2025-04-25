@@ -1,4 +1,4 @@
-from attr import dataclass
+from dataclasses import dataclass
 
 from common.color_type_enum import ColourType
 
