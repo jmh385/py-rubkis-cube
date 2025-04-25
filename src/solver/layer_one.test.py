@@ -3,7 +3,6 @@ from typing import Optional
 from unittest import TestSuite
 
 from anyio import sleep_forever
-from reportlab.lib.colors import ColorType
 
 from common.color_type_enum import ColourType
 from cube.cube import Cube
