@@ -8,3 +8,5 @@ side_order: List[SideData] = [
     SideData(ColourType.orange, 1, 7, 2, 0),
     SideData(ColourType.green, 3, 5, 3, 3),
     SideData(ColourType.red, 7, 1, 4, 2)]
+
+none_side_data = SideData(ColourType.black, -1, -1, -1, -1)
