@@ -7,6 +7,7 @@ import pygame
 from common.move_enum import Move
 from cube.cube import Cube
 from setup import setup_sides
+from solver.consts import side_order
 from solver.layer_one import layer_one
 from ui.draw_cube import draw_cube
 from ui.square import Square

@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Tuple, List
 
 from common.color_type_enum import ColourType
 
@@ -10,3 +11,4 @@ class SideData:
     side_front_middle_index: int
     side_index: int
     turns_from_top: int
+    left_bottom_corner: List[Tuple[int, int]]
