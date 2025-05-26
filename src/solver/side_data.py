@@ -12,3 +12,4 @@ class SideData:
     side_index: int
     turns_from_top: int
     left_bottom_corner: List[Tuple[int, int]]
+    left_top_corner: List[Tuple[int, int]]

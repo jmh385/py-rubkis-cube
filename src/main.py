@@ -7,7 +7,7 @@ import pygame
 from common.move_enum import Move
 from cube.cube import Cube
 from setup import setup_sides
-from solver.consts import side_order
+from solver.side_consts import side_order
 from solver.layer_one import layer_one
 from ui.draw_cube import draw_cube
 from ui.square import Square
@@ -38,6 +38,8 @@ square_lst.append(
 square_lst.append(Square([display_length // 2 - 65, display_height // 2 + 120], [30, 60], display_size, Move.left))
 square_lst.append(Square([0, 0], [30, 60], display_size, Move.front))
 square_lst.append(Square([0, 400], [30, 60], display_size, Move.turn_front))
+square_lst.append(Square([1000, 400], [30, 60], display_size, Move.turn_front_prime))
+
 square_lst.append(Square([0, 500], [30, 60], display_size, Move.back))
 square_lst.append(Square([50, display_height // 2 - 30], [60, 60], display_size, Move.turn_left))
 square_lst.append(Square([956, display_height // 2 - 30], [60, 60], display_size, Move.turn_right))
