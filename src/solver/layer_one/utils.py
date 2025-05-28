@@ -4,7 +4,6 @@ from common.color_type_enum import ColourType
 from common.move_enum import Move
 from cube.cube import Cube
 from cube.cube_exception import CubeException
-from solver.layer_one.white_cross import does_side_data_match_side_index
 from solver.side_consts import side_order, none_side_data
 from solver.side_data import SideData
 
@@ -72,6 +71,10 @@ def get_corner_colours(cube: Cube, corner: List[Tuple[int, int]]) -> Tuple[Colou
 
     return cube.sides[side_index_1][face_index_1], cube.sides[side_index_2][face_index_2], cube.sides[side_index_3][
         face_index_3]
+
+def does_side_data_match_side_index(side_data: SideData, side: int) -> bool:
+    return side_data.side_index == side
+
 
 def get_side_data_by_side_index(side_index: int) -> SideData:
     for side_data in side_order:

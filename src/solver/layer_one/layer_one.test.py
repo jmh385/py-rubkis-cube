@@ -6,13 +6,8 @@ from anyio import sleep_forever
 
 from common.color_type_enum import ColourType
 from cube.cube import Cube
+from solver.layer_one.layer_one import layer_one
 from solver.side_consts import side_order
-from solver.layer_one import white_side_up, align_sides, is_edge_with_white_not_on_back, \
-    edge_with_white_not_on_back_solve, is_edge_correct_oriented, is_edge_backwards, \
-    white_on_top_with_side_colour_mismatched_solve, is_white_on_top_with_side_colour_mismatched, \
-    is_white_on_side_with_colour_on_top, white_on_side_with_colour_on_top_solve, white_cross, layer_one, \
-    save_corner_on_top_but_mismatched, is_corner_on_top_but_mismatched, is_white_face_of_corner_on_back_side, \
-    is_corner_aligned, is_corner_with_white_on_side
 
 
 class TestLayerOne(unittest.TestCase):

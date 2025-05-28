@@ -6,7 +6,7 @@ from cube.cube import Cube
 from cube.cube_exception import CubeException
 from solver.layer_one.edge_consts import edge_mappings, sides_to_bottom_middle, sides_and_bottom_middle_to_side_5, \
     edges_with_white
-from solver.layer_one.utils import generate_most_matching
+from solver.layer_one.utils import generate_most_matching, is_colour_is_aligned, does_side_data_match_side_index
 from solver.side_consts import side_order
 from solver.side_data import SideData
 
@@ -33,11 +33,6 @@ def is_edge_correct_oriented(cube: Cube, side_data: SideData) -> bool:
     return any((cube.sides[side][bottom_middle] == side_data.colour_type
                 and cube.sides[5][sides_and_bottom_middle_to_side_5[(side, bottom_middle)]] == ColourType.white)
                for side, bottom_middle in sides_to_bottom_middle)
-
-
-def does_side_data_match_side_index(side_data: SideData, side: int) -> bool:
-    return side_data.side_index == side
-
 
 def detect_backwards_edge(cube: Cube, side_data: SideData) -> Optional[SideData]:
     for side_index, bottom_middle in sides_to_bottom_middle:
