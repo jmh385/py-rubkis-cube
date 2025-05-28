@@ -22,8 +22,8 @@ class Cube:
                                                 Move.front: self.front, Move.front_prime: self.front_prime,
                                                 Move.turn_up: self.turn_up, Move.turn_down: self.turn_down,
                                                 Move.turn_right: self.turn_right, Move.turn_left: self.turn_left,
-                                                Move.turn_front: self.turn_front_prime,
-                                                Move.turn_front_prime: self.turn_front}
+                                                Move.turn_front: self.turn_front,
+                                                Move.turn_front_prime: self.turn_front_prime}
 
     def up(self, times: int = 1) -> List[Move]:
         for i in range(times):

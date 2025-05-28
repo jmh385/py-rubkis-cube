@@ -1,122 +1,14 @@
-from copy import deepcopy
-from typing import Dict, Tuple, List, Optional
+from typing import List, Optional
 
 from common.color_type_enum import ColourType
 from common.move_enum import Move
 from cube.cube import Cube
 from cube.cube_exception import CubeException
-from solver.consts import side_order
+from solver.layer_one.edge_consts import edge_mappings, sides_to_bottom_middle, sides_and_bottom_middle_to_side_5, \
+    edges_with_white
+from solver.layer_one.utils import generate_most_matching, is_colour_is_aligned, does_side_data_match_side_index
+from solver.side_consts import side_order
 from solver.side_data import SideData
-
-
-def white_side_up(cube: Cube) -> List[Move]:
-    moves = []
-    if cube.sides[0][4] == ColourType.white:
-        return moves
-    for i in range(4):
-        cube.turn_left()
-        moves.append(Move.turn_left)
-        if cube.sides[0][4] == ColourType.white:
-            return moves
-    for i in range(4):
-        cube.turn_down()
-        moves.append(Move.turn_down)
-        if cube.sides[0][4] == ColourType.white:
-            return moves
-    raise CubeException(cube, "White side could not be found")
-
-
-def check_alignment(cube: Cube) -> bool:
-    return any(cube.sides[index][4] == sideData.colour_type for index, sideData in enumerate(side_order, 1))
-
-
-def align_sides(cube: Cube) -> List[Move]:
-    moves: List[Move] = []
-    if cube.sides[0][4] != ColourType.white:
-        raise CubeException(cube, "White side is not on top")
-
-    if check_alignment(cube):
-        return moves
-
-    for i in range(4):
-        cube.turn_front()
-        moves.append(Move.turn_front)
-        if check_alignment(cube):
-            return moves
-    raise CubeException(cube, "could not align sides")
-
-
-def generate_most_matching(cube: Cube) -> List[Move]:
-    moves: List[Move] = []
-    best_turn = 0
-    best_count = 0
-    for i in range(4):
-        moves.extend(cube.front())
-        count = sum(1 for index, side_data in enumerate(side_order, 1) if
-                    cube.sides[0][side_data.front_cross_index] == ColourType.white
-                    and cube.sides[index][side_data.side_front_middle_index] == side_data.colour_type)
-        if count > best_count:
-            best_turn = i + 1
-            best_count = count
-    moves.extend(cube.front(best_turn))
-    return moves
-
-
-def is_colour_is_aligned(cube: Cube, side_data: SideData) -> bool:
-    return (cube.sides[0][side_data.front_cross_index] == ColourType.white
-            and cube.sides[side_data.side_index][side_data.side_front_middle_index] == side_data.colour_type)
-
-
-sides_to_bottom_middle: List[Tuple[int, int]] = [
-    (1, 5),
-    (2, 1),
-    (3, 3),
-    (4, 7)
-]
-
-sides_and_bottom_middle_to_side_5: Dict[tuple[int, int], int] = {
-    (1, 5): 3,
-    (2, 1): 1,
-    (3, 3): 5,
-    (4, 7): 7
-}
-
-edge_mappings: Dict[tuple[int, int], tuple[int, int]] = {
-    (0, 1): (2, 7),
-    (0, 3): (3, 5),
-    (0, 5): (1, 3),
-    (0, 7): (4, 1),
-
-    (1, 1): (2, 5),
-    (1, 3): (0, 5),
-    (1, 5): (5, 3),
-    (1, 7): (4, 5),
-
-    (2, 1): (5, 1),
-    (2, 3): (3, 1),
-    (2, 5): (1, 1),
-    (2, 7): (0, 1),
-
-    (3, 1): (2, 3),
-    (3, 3): (5, 5),
-    (3, 5): (0, 3),
-    (3, 7): (4, 3),
-
-    (4, 1): (0, 7),
-    (4, 3): (3, 7),
-    (4, 5): (1, 7),
-    (4, 7): (5, 7),
-
-    (5, 1): (2, 1),
-    (5, 3): (1, 5),
-    (5, 5): (3, 3),
-    (5, 7): (4, 7)
-}
-
-edges_with_white: List[tuple[tuple[int, int], tuple[int, int]]] = [(edge_face_1, edge_face_2) for
-                                                                   edge_face_1, edge_face_2 in edge_mappings.items() if
-                                                                   edge_face_2[0] == 0]
-
 
 
 def is_edge_with_white_not_on_back(cube: Cube, side_data: SideData) -> bool:
@@ -142,17 +34,13 @@ def is_edge_correct_oriented(cube: Cube, side_data: SideData) -> bool:
                 and cube.sides[5][sides_and_bottom_middle_to_side_5[(side, bottom_middle)]] == ColourType.white)
                for side, bottom_middle in sides_to_bottom_middle)
 
-
-def does_side_data_match_side_index(side_data: SideData, side: int) -> bool:
-    return side_data.side_index == side
-
-
 def detect_backwards_edge(cube: Cube, side_data: SideData) -> Optional[SideData]:
     for side_index, bottom_middle in sides_to_bottom_middle:
         if (cube.sides[side_index][bottom_middle] == ColourType.white
                 and cube.sides[5][
                     sides_and_bottom_middle_to_side_5[(side_index, bottom_middle)]] == side_data.colour_type):
             return [side for side in side_order if does_side_data_match_side_index(side, side_index)][0]
+    return None
 
 
 def backwards_edge_solve(cube: Cube, side_data: SideData) -> List[Move]:
@@ -176,6 +64,7 @@ def detect_correct_oriented_edge(cube: Cube, side_data: SideData) -> Optional[Si
                 and cube.sides[5][
                     sides_and_bottom_middle_to_side_5[(side_index, bottom_middle)]] == ColourType.white):
             return [side for side in side_order if does_side_data_match_side_index(side, side_index)][0]
+    return None
 
 
 def correct_oriented_edge_solve(cube: Cube, side_data: SideData) -> List[Move]:
@@ -207,13 +96,15 @@ def detect_edge_with_white_not_on_back(cube: Cube, side_data: SideData) -> Optio
     res = None
     for i in range(4):
         for possible_edge in possible_edges:
-            white_edge = [edge for edge in edges_with_white if edge[0][0] == possible_edge[1][0]] # find the white side of the edge
+            white_edge = [edge for edge in edges_with_white if
+                          edge[0][0] == possible_edge[1][0]]  # find the white side of the edge
             # print(f"white edge: {white_edge}")
             if len(white_edge) > 0 and cube.sides[0][white_edge[0][1][1]] != ColourType.white:
                 chosen_side_index, index_on_side = possible_edge[0]
                 res = [side for side in side_order if does_side_data_match_side_index(side, chosen_side_index)][0]
         cube.front()
     return res
+
 
 def edge_with_white_not_on_back_solve(cube: Cube, side_data: SideData) -> List[Move]:
     moves: List[Move] = []
@@ -274,12 +165,13 @@ def detect_white_on_side_with_colour_on_top(cube: Cube, side_data: SideData) -> 
         ((edge_face_1_side, edge_face_1_index), (edge_face_2_side, edge_face_2_index))
         for (edge_face_1_side, edge_face_1_index), (edge_face_2_side, edge_face_2_index) in edge_mappings.items()
         if edge_face_2_side == 0
-        and cube.sides[edge_face_1_side][edge_face_1_index] == ColourType.white # side is white
-        and cube.sides[edge_face_2_side][edge_face_2_index] == side_data.colour_type # top is a colour
+        and cube.sides[edge_face_1_side][edge_face_1_index] == ColourType.white  # side is white
+        and cube.sides[edge_face_2_side][edge_face_2_index] == side_data.colour_type  # top is a colour
     )
     if len(possible_edges) > 0:
         ((incorrect_white_side, _), _) = possible_edges[0]
         return [side for side in side_order if does_side_data_match_side_index(side, incorrect_white_side)][0]
+    return None
 
 
 def detect_white_on_top_with_side_colour_mismatched(cube: Cube, side_data: SideData) -> Optional[SideData]:
@@ -288,29 +180,32 @@ def detect_white_on_top_with_side_colour_mismatched(cube: Cube, side_data: SideD
         for (edge_face_1_side, edge_face_1_index), (edge_face_2_side, edge_face_2_index) in edge_mappings.items()
         if edge_face_2_side == 0
         and cube.sides[edge_face_1_side][edge_face_1_index] == side_data.colour_type
-        and cube.sides[edge_face_1_side][4] != side_data.colour_type # side colour is not matched with expected colour
-        and cube.sides[edge_face_2_side][edge_face_2_index] == ColourType.white # top is white
+        and cube.sides[edge_face_1_side][4] != side_data.colour_type  # side colour is not matched with expected colour
+        and cube.sides[edge_face_2_side][edge_face_2_index] == ColourType.white  # top is white
     )
     if len(possible_edges) > 0:
         ((incorrect_white_side, _), _) = possible_edges[0]
         return [side for side in side_order if does_side_data_match_side_index(side, incorrect_white_side)][0]
+    return None
 
 
 def white_on_top_with_side_colour_mismatched_solve(cube: Cube, side_data: SideData) -> List[Move]:
     moves: List[Move] = []
     white_on_top_with_side_colour_mismatched = detect_white_on_top_with_side_colour_mismatched(cube, side_data)
     moves.extend(cube.turn_front(white_on_top_with_side_colour_mismatched.turns_from_top))
-    moves.extend(cube.up(2)) # 2 turns to make it solvable
+    moves.extend(cube.up(2))  # 2 turns to make it solvable
     moves.extend(cube.turn_front_prime(white_on_top_with_side_colour_mismatched.turns_from_top))
     return moves
+
 
 def white_on_side_with_colour_on_top_solve(cube: Cube, side_data: SideData) -> List[Move]:
     moves: List[Move] = []
     white_on_side_with_colour_on_top = detect_white_on_side_with_colour_on_top(cube, side_data)
     moves.extend(cube.turn_front(white_on_side_with_colour_on_top.turns_from_top))
-    moves.extend(cube.up(2)) # 2 turns to make it solvable
+    moves.extend(cube.up(2))  # 2 turns to make it solvable
     moves.extend(cube.turn_front_prime(white_on_side_with_colour_on_top.turns_from_top))
     return moves
+
 
 def turn_front_until_free_over_top(cube: Cube) -> List[Move]:
     moves: List[Move] = []
@@ -319,8 +214,6 @@ def turn_front_until_free_over_top(cube: Cube) -> List[Move]:
             return moves
         moves.extend(cube.front())
     return moves
-
-
 
 
 def white_cross(cube: Cube) -> List[Move]:
@@ -346,13 +239,3 @@ def white_cross(cube: Cube) -> List[Move]:
             if is_edge_correct_oriented(cube, side_data):
                 moves.extend(correct_oriented_edge_solve(cube, side_data))
     return moves
-
-
-def layer_one(real_cube: Cube, debug: bool = False) -> List[Move]:
-    cube: Cube = deepcopy(real_cube) if not debug else real_cube
-    moves: List[Move] = []
-    moves.extend(white_side_up(cube))
-    moves.extend(align_sides(cube))
-    moves.extend(white_cross(cube))
-    print(moves)
-    return moves if not debug else []

@@ -1,7 +1,7 @@
-from enum import Enum
+from enum import StrEnum
 
 
-class ColourType(Enum):
+class ColourType(StrEnum):
     red = 'r'
     white = 'w'
     green = 'g'
