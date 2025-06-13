@@ -5,6 +5,48 @@ from common.move_enum import Move
 from cube.cube import Cube
 
 
+def solve_left_destroy_right(cube: Cube) -> List[Move]:
+    return cube.movement_parser([Move.left_prime,
+                                 Move.up_prime,
+                                 Move.front,
+                                 Move.up,
+                                 Move.front,
+                                 Move.left,
+                                 Move.front_prime])
+
+
+def solve_left_save_right(cube: Cube) -> List[Move]:
+    return cube.movement_parser([Move.right,
+                                 Move.up,
+                                 Move.front,
+                                 Move.up_prime,
+                                 Move.right_prime,
+                                 Move.front,
+                                 Move.down_prime,
+                                 Move.front_prime])
+
+
+def solve_right_save_left(cube: Cube) -> List[Move]:
+    return cube.movement_parser([Move.right,
+                                 Move.up,
+                                 Move.front_prime,
+                                 Move.up_prime,
+                                 Move.front_prime,
+                                 Move.right_prime,
+                                 Move.front])
+
+
+def solve_right_destroy_left(cube: Cube) -> List[Move]:
+    return cube.movement_parser([Move.left_prime,
+                                 Move.up_prime,
+                                 Move.front_prime,
+                                 Move.up,
+                                 Move.left,
+                                 Move.front_prime,
+                                 Move.down,
+                                 Move.front])
+
+
 def layer_two(cube: Cube) -> List[Move]:
     moves_played: List[Move] = []
     true_side = 0
@@ -49,7 +91,8 @@ def layer_two(cube: Cube) -> List[Move]:
             if (cube.sides[0][5] != cube.sides[0][4] or cube.sides[1][4] != cube.sides[1][3]) and \
                     (cube.sides[0][5] in color_lst and cube.sides[1][3] in color_lst):
                 moves_played.extend(cube.movement_parser(
-                    [Move.right_prime, Move.down_prime, Move.right, Move.down, Move.front, Move.down, Move.front_prime]))
+                    [Move.right_prime, Move.down_prime, Move.right, Move.down, Move.front, Move.down,
+                     Move.front_prime]))
             if (cube.sides[0][3] != cube.sides[0][4] or cube.sides[3][5] != cube.sides[3][4]) and \
                     (cube.sides[0][3] in color_lst and cube.sides[3][5] in color_lst):
                 moves_played.extend(cube.movement_parser(
