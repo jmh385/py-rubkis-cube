@@ -6,4 +6,4 @@ class CubeException(Exception):
     def __init__(self, cube: Cube, message = default_message):
         self.message = message
         self.cube = cube
-        super().__init__(f"{self.message}\ncube:{self.cube}")
+        super().__init__(f"{self.message}\ncube:\n{self.cube}")

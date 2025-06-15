@@ -112,7 +112,7 @@ def solve_corner_correctly_aligned(cube: Cube, side_data: SideData) -> List[Move
     if not corner:
         raise CubeException(cube, "if_correctly_aligned miss fired")
 
-    moves.extend(cube.turn_front(side_data.turns_from_top))
+    moves.extend(cube.turn_z(side_data.turns_from_top))
     white_side_corner_face = [face for face in magic_corner_bottom
                               if cube.sides[face[0]][face[1]] == ColourType.white][0]
     [side_index, _] = white_side_corner_face
@@ -120,7 +120,7 @@ def solve_corner_correctly_aligned(cube: Cube, side_data: SideData) -> List[Move
         moves.extend(cube.movement_parser([Move.back_prime, Move.left_prime, Move.back, Move.left]))
     else:
         moves.extend(cube.movement_parser([Move.left_prime, Move.back_prime, Move.left]))
-    moves.extend(cube.turn_front_prime(side_data.turns_from_top))
+    moves.extend(cube.turn_z_prime(side_data.turns_from_top))
 
     return moves
 
@@ -167,9 +167,9 @@ def save_white_face_of_corner_on_back_side(cube: Cube, side_data: SideData) -> L
                                               side_data.left_bottom_corner,
                                               list(get_corner_colours(cube, corner))))
 
-    moves.extend(cube.turn_front(side_data.turns_from_top))
+    moves.extend(cube.turn_z(side_data.turns_from_top))
     moves.extend(cube.movement_parser([Move.left_prime, Move.back, Move.left]))
-    moves.extend(cube.turn_front_prime(side_data.turns_from_top))
+    moves.extend(cube.turn_z_prime(side_data.turns_from_top))
 
     return moves
 
@@ -212,7 +212,7 @@ def save_corner_on_top_but_mismatched(cube, side_data: SideData) -> List[Move]:
     moves: List[Move] = []
     corner = detect_corner_on_top_but_mismatched(cube, side_data)
     moves_to_align_corner = movement_until_corner_aligns(cube,
-                                                         [Move.turn_front],
+                                                         [Move.turn_z],
                                                          magic_corner_top,
                                                          list(get_corner_colours(cube, corner)))
     moves.extend(moves_to_align_corner)
@@ -227,7 +227,7 @@ def save_corner_on_top_but_mismatched(cube, side_data: SideData) -> List[Move]:
     elif get_face_color(cube, front_side_face_magic_corner) == ColourType.white:
         moves.extend(cube.movement_parser([Move.up, Move.back, Move.up_prime]))
 
-    moves.extend(cube.turn_front_prime(len(moves_to_align_corner)))
+    moves.extend(cube.turn_z_prime(len(moves_to_align_corner)))
     return moves
 
 

@@ -13,7 +13,7 @@ def solve(cube: Cube, watch=False):
             cube.sides[2].count(cube.sides[2][4]) != 9 or \
             cube.sides[3].count(cube.sides[3][4]) != 9:
 
-        cube.turn_down(2)
+        cube.turn_x_prime(2)
         while cube.sides[2].count(cube.sides[2][4]) != 9:
             #  creates cross - tested OK
             while not (
@@ -67,7 +67,7 @@ def solve(cube: Cube, watch=False):
                     for side in cube.sides[0], cube.sides[1], cube.sides[3], cube.sides[5]:
                         if side.count(side[4]) == 9:
                             while not (cube.sides[3][0] == cube.sides[3][2] == cube.sides[3][1]):
-                                cube.turn_left()
+                                cube.turn_y()
                 if count_corners == 1:
                     for side in cube.sides[0], cube.sides[1], cube.sides[3], cube.sides[5]:
                         if side[0] == side[2] and side[0] != side[1]:
@@ -79,7 +79,7 @@ def solve(cube: Cube, watch=False):
                         print(color)
                         cube.up()
                     while cube.sides[3][0] != cube.sides[3][2]:
-                        cube.turn_left()
+                        cube.turn_y()
                         print(cube)
                 cube.movement_parser(
                     [Move.left_prime, Move.up, Move.right, Move.up_prime, Move.left, Move.up, Move.up, Move.right_prime,
@@ -100,7 +100,7 @@ def solve(cube: Cube, watch=False):
                 count_corners = cube.count_corners()
             if count_corners == 3:
                 while cube.sides[5].count(cube.sides[5][4]) != 9:
-                    cube.turn_left()
+                    cube.turn_y()
                 if cube.sides[0][2] == cube.sides[1][4]:
                     cube.movement_parser(
                         [Move.front, Move.front, Move.up_prime, Move.right_prime, Move.left, Move.front, Move.front,

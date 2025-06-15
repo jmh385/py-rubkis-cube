@@ -37,14 +37,14 @@ square_lst.append(
     Square([display_length // 2 + 40, display_height // 2 + 120], [30, 60], display_size, Move.right_prime))
 square_lst.append(Square([display_length // 2 - 65, display_height // 2 + 120], [30, 60], display_size, Move.left))
 square_lst.append(Square([0, 0], [30, 60], display_size, Move.front))
-square_lst.append(Square([0, 400], [30, 60], display_size, Move.turn_front))
-square_lst.append(Square([1000, 400], [30, 60], display_size, Move.turn_front_prime))
+square_lst.append(Square([0, 400], [30, 60], display_size, Move.turn_z))
+square_lst.append(Square([1000, 400], [30, 60], display_size, Move.turn_z_prime))
 
 square_lst.append(Square([0, 500], [30, 60], display_size, Move.back))
-square_lst.append(Square([50, display_height // 2 - 30], [60, 60], display_size, Move.turn_left))
-square_lst.append(Square([956, display_height // 2 - 30], [60, 60], display_size, Move.turn_right))
-square_lst.append(Square([625, 50], [60, 60], display_size, Move.turn_up))
-square_lst.append(Square([380, 590], [60, 60], display_size, Move.turn_down))
+square_lst.append(Square([50, display_height // 2 - 30], [60, 60], display_size, Move.turn_y_prime))
+square_lst.append(Square([956, display_height // 2 - 30], [60, 60], display_size, Move.turn_y))
+square_lst.append(Square([625, 50], [60, 60], display_size, Move.turn_x))
+square_lst.append(Square([380, 590], [60, 60], display_size, Move.turn_x_prime))
 
 TIME_BETWEEN_MOVES_SECONDS = 0
 move_timestamp = time.time()
@@ -74,7 +74,7 @@ while True:
                 moves = layer_one.layer_one(cube, True)
                 current_move = 0
             elif event.key == pygame.K_RALT:
-                layer_two(cube)
+                layer_two(cube, True)
                 # current_move = 0
             elif event.key == pygame.K_LALT:
                 cube.sides = deepcopy(setup_sides)
