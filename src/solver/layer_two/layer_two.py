@@ -6,6 +6,7 @@ from common.move_enum import Move
 from cube.cube import Cube
 from cube.cube_exception import CubeException
 from cube.edge_consts import edge_mappings
+from solver.layer_two.verify_layer_one_is_solved import verify_layer_one_is_solved
 
 non_first_layer_edges: List[Tuple[Tuple[int, int], Tuple[int, int]]] = [edge
                                                                         for edge
@@ -141,7 +142,7 @@ def align_bottom_edge(cube: Cube, edge_combo: Tuple[ColourType, ColourType]) -> 
     moves: List[Move] = []
     colour_1, colour_2 = edge_combo
     for _ in range(4):
-        if (cube.sides[0][7] == colour_1 and cube.sides[4][1] == colour_2)\
+        if (cube.sides[0][7] == colour_1 and cube.sides[4][1] == colour_2) \
                 or (cube.sides[0][7] == colour_2 and cube.sides[4][1] == colour_1):
             return moves
         moves.extend(cube.down())
@@ -193,5 +194,7 @@ def layer_two(real_cube: Cube, debug: bool = False) -> List[Move]:
     cube: Cube = deepcopy(real_cube) if not debug else real_cube
     moves: List[Move] = []
     moves.extend(colours_on_side(cube))
+    if not verify_layer_one_is_solved(cube):
+        raise CubeException(cube, "tried to invoke second layer solve but first layer was not solved")
     moves.extend(solve_side_edges(cube))
     return moves
