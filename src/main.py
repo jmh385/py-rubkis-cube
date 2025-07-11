@@ -8,6 +8,7 @@ from common.move_enum import Move
 from cube.cube import Cube
 from setup import setup_sides
 from solver.layer_one import layer_one
+from solver.layer_three.layer_three import layer_three
 from solver.layer_two.layer_two import layer_two
 from ui.draw_cube import draw_cube
 from ui.square import Square
@@ -51,7 +52,6 @@ move_timestamp = time.time()
 moves = []
 current_move = -1
 
-
 while True:
     if -1 < current_move < len(moves) and time.time() - move_timestamp > TIME_BETWEEN_MOVES_SECONDS:
         cube.movement_parser(moves[current_move])
@@ -75,7 +75,8 @@ while True:
                 current_move = 0
             elif event.key == pygame.K_RALT:
                 layer_two(cube, True)
-                # current_move = 0
+            elif event.key == pygame.K_w:
+                layer_three(cube, True)
             elif event.key == pygame.K_LALT:
                 cube.sides = deepcopy(setup_sides)
     elapsed = round(time.time() - start_time, 3)
