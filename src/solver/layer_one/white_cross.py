@@ -4,7 +4,7 @@ from common.color_type_enum import ColourType
 from common.move_enum import Move
 from cube.cube import Cube
 from cube.cube_exception import CubeException
-from solver.layer_one.edge_consts import edge_mappings, sides_to_bottom_middle, sides_and_bottom_middle_to_side_5, \
+from cube.edge_consts import edge_mappings, sides_to_bottom_middle, sides_and_bottom_middle_to_side_5, \
     edges_with_white
 from solver.layer_one.utils import generate_most_matching, is_colour_is_aligned, does_side_data_match_side_index
 from solver.side_consts import side_order
@@ -34,6 +34,7 @@ def is_edge_correct_oriented(cube: Cube, side_data: SideData) -> bool:
                 and cube.sides[5][sides_and_bottom_middle_to_side_5[(side, bottom_middle)]] == ColourType.white)
                for side, bottom_middle in sides_to_bottom_middle)
 
+
 def detect_backwards_edge(cube: Cube, side_data: SideData) -> Optional[SideData]:
     for side_index, bottom_middle in sides_to_bottom_middle:
         if (cube.sides[side_index][bottom_middle] == ColourType.white
@@ -45,7 +46,7 @@ def detect_backwards_edge(cube: Cube, side_data: SideData) -> Optional[SideData]
 
 def backwards_edge_solve(cube: Cube, side_data: SideData) -> List[Move]:
     moves: List[Move] = []
-    moves.extend(cube.turn_front(side_data.turns_from_top))
+    moves.extend(cube.turn_z(side_data.turns_from_top))
     backwards_piece_side = detect_backwards_edge(cube, side_data)
     if backwards_piece_side:
         moves.extend(cube.back(backwards_piece_side.turns_from_top))
@@ -54,7 +55,7 @@ def backwards_edge_solve(cube: Cube, side_data: SideData) -> List[Move]:
             raise CubeException(cube, "Failed to align back correctly")
 
         moves.extend(cube.movement_parser([Move.up, Move.front, Move.right_prime, Move.front_prime]))
-    moves.extend(cube.turn_front_prime(side_data.turns_from_top))
+    moves.extend(cube.turn_z_prime(side_data.turns_from_top))
     return moves
 
 
@@ -69,7 +70,7 @@ def detect_correct_oriented_edge(cube: Cube, side_data: SideData) -> Optional[Si
 
 def correct_oriented_edge_solve(cube: Cube, side_data: SideData) -> List[Move]:
     moves: List[Move] = []
-    moves.extend(cube.turn_front(side_data.turns_from_top))
+    moves.extend(cube.turn_z(side_data.turns_from_top))
     correct_oriented_edge_side = detect_correct_oriented_edge(cube, side_data)
     if correct_oriented_edge_side:
         moves.extend(cube.back(correct_oriented_edge_side.turns_from_top))
@@ -78,7 +79,7 @@ def correct_oriented_edge_solve(cube: Cube, side_data: SideData) -> List[Move]:
             raise CubeException(cube, "Failed to align back correctly")
 
         moves.extend(cube.up(2))
-    moves.extend(cube.turn_front_prime(side_data.turns_from_top))
+    moves.extend(cube.turn_z_prime(side_data.turns_from_top))
     return moves
 
 
@@ -111,7 +112,7 @@ def edge_with_white_not_on_back_solve(cube: Cube, side_data: SideData) -> List[M
     not_on_back_side = detect_edge_with_white_not_on_back(cube, side_data)
     print(f"bad side: {not_on_back_side}")
     # print(cube.sides[2][4])
-    moves.extend(cube.turn_front(not_on_back_side.turns_from_top))
+    moves.extend(cube.turn_z(not_on_back_side.turns_from_top))
     freeing_moves = turn_front_until_free_over_top(cube)
     moves.extend(freeing_moves)
     if any(
@@ -128,7 +129,7 @@ def edge_with_white_not_on_back_solve(cube: Cube, side_data: SideData) -> List[M
     else:
         raise CubeException(cube, "Could not find right side")
     moves.extend(cube.front_prime(len(freeing_moves)))
-    moves.extend(cube.turn_front_prime(not_on_back_side.turns_from_top))
+    moves.extend(cube.turn_z_prime(not_on_back_side.turns_from_top))
     return moves
 
 
@@ -192,18 +193,18 @@ def detect_white_on_top_with_side_colour_mismatched(cube: Cube, side_data: SideD
 def white_on_top_with_side_colour_mismatched_solve(cube: Cube, side_data: SideData) -> List[Move]:
     moves: List[Move] = []
     white_on_top_with_side_colour_mismatched = detect_white_on_top_with_side_colour_mismatched(cube, side_data)
-    moves.extend(cube.turn_front(white_on_top_with_side_colour_mismatched.turns_from_top))
+    moves.extend(cube.turn_z(white_on_top_with_side_colour_mismatched.turns_from_top))
     moves.extend(cube.up(2))  # 2 turns to make it solvable
-    moves.extend(cube.turn_front_prime(white_on_top_with_side_colour_mismatched.turns_from_top))
+    moves.extend(cube.turn_z_prime(white_on_top_with_side_colour_mismatched.turns_from_top))
     return moves
 
 
 def white_on_side_with_colour_on_top_solve(cube: Cube, side_data: SideData) -> List[Move]:
     moves: List[Move] = []
     white_on_side_with_colour_on_top = detect_white_on_side_with_colour_on_top(cube, side_data)
-    moves.extend(cube.turn_front(white_on_side_with_colour_on_top.turns_from_top))
+    moves.extend(cube.turn_z(white_on_side_with_colour_on_top.turns_from_top))
     moves.extend(cube.up(2))  # 2 turns to make it solvable
-    moves.extend(cube.turn_front_prime(white_on_side_with_colour_on_top.turns_from_top))
+    moves.extend(cube.turn_z_prime(white_on_side_with_colour_on_top.turns_from_top))
     return moves
 
 

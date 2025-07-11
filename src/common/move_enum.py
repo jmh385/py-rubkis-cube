@@ -20,11 +20,11 @@ class Move(Enum):
     back = 'b'
     back_prime = 'B'
 
-    turn_up = 'x'
-    turn_down = 'X'
+    turn_x = 'x'
+    turn_x_prime = 'X'
 
-    turn_right = 'y'
-    turn_left = 'Y'
+    turn_y = 'y'
+    turn_y_prime = 'Y'
 
-    turn_front = 'z'
-    turn_front_prime = 'Z'
+    turn_z = 'z'
+    turn_z_prime = 'Z'

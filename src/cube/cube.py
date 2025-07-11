@@ -20,10 +20,10 @@ class Cube:
                                                 Move.left: self.left, Move.left_prime: self.left_prime,
                                                 Move.back: self.back, Move.back_prime: self.back_prime,
                                                 Move.front: self.front, Move.front_prime: self.front_prime,
-                                                Move.turn_up: self.turn_up, Move.turn_down: self.turn_down,
-                                                Move.turn_right: self.turn_right, Move.turn_left: self.turn_left,
-                                                Move.turn_front: self.turn_front,
-                                                Move.turn_front_prime: self.turn_front_prime}
+                                                Move.turn_x: self.turn_x, Move.turn_x_prime: self.turn_x_prime,
+                                                Move.turn_y: self.turn_y_prime, Move.turn_y_prime: self.turn_y,
+                                                Move.turn_z: self.turn_z,
+                                                Move.turn_z_prime: self.turn_z_prime}
 
     def up(self, times: int = 1) -> List[Move]:
         for i in range(times):
@@ -135,7 +135,7 @@ class Cube:
         self.back(3 * times)
         return [Move.back_prime] * times
 
-    def turn_left(self, times: int = 1) -> List[Move]:
+    def turn_y(self, times: int = 1) -> List[Move]:
         for i in range(times):
             dump = self.sides[1][:]
             self.sides[1] = self.sides[5]
@@ -152,17 +152,17 @@ class Cube:
             ret_lst[3:6] = self.sides[4][1:8:3]
             ret_lst[6:] = self.sides[4][0:7:3]
             self.sides[4] = ret_lst[:]
-        return [Move.turn_left] * times
+        return [Move.turn_y_prime] * times
 
-    def turn_right(self, times: int = 1) -> List[Move]:
-        self.turn_left(3* times)
-        return [Move.turn_right] * times
+    def turn_y_prime(self, times: int = 1) -> List[Move]:
+        self.turn_y(3 * times)
+        return [Move.turn_y] * times
 
-    def turn_up(self, times: int = 1) -> List[Move]:
-        self.turn_down(3 * times)
-        return [Move.turn_up] * times
+    def turn_x(self, times: int = 1) -> List[Move]:
+        self.turn_x_prime(3 * times)
+        return [Move.turn_x] * times
 
-    def turn_down(self, times: int = 1) -> List[Move]:
+    def turn_x_prime(self, times: int = 1) -> List[Move]:
         for i in range(times):
             dump = self.sides[2][:]
             self.sides[2] = list(reversed(self.sides[5]))
@@ -179,18 +179,18 @@ class Cube:
             ret_lst[3:6] = self.sides[3][1:8:3]
             ret_lst[6:] = self.sides[3][0:7:3]
             self.sides[3] = list(reversed(ret_lst))
-        return [Move.turn_down] * times
+        return [Move.turn_x_prime] * times
 
-    def turn_front_prime(self, times: int = 1) -> List[Move]:
+    def turn_z_prime(self, times: int = 1) -> List[Move]:
         for i in range(times):
-            self.turn_down()
-            self.turn_right()
-            self.turn_up()
-        return  [Move.turn_front_prime] * times
+            self.turn_x_prime()
+            self.turn_y_prime()
+            self.turn_x()
+        return  [Move.turn_z_prime] * times
 
-    def turn_front(self, times: int = 1) -> List[Move]:
-        self.turn_front_prime(3 * times)
-        return [Move.turn_front] * times
+    def turn_z(self, times: int = 1) -> List[Move]:
+        self.turn_z_prime(3 * times)
+        return [Move.turn_z] * times
 
     def movement_parser(self, moves: Union[List[Move], Move]) -> List[Move]:
         if type(moves) == Move:
@@ -214,14 +214,6 @@ class Cube:
             if side[0] == side[2] and side[0] != side[1]:
                 count_corners += 1
         return count_corners
-
-    def count_sides(self) -> int:
-        count = 0
-        side_key = {0: 1, 1: 5, 5: 7, 3: 3}
-        for side in self.sides[0], self.sides[1], self.sides[3], self.sides[5]:
-            if side[7] != ColourType.yellow and self.sides[4][side_key[i]] != ColourType.yellow:
-                count += 1
-        return  count
 
     def randomise_for_study(self):
         count = 0

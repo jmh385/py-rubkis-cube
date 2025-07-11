@@ -19,7 +19,7 @@ class Square:
         [corner_x, corner_y] = self.corner
         [width, height] = self.dimensions
         pygame.draw.rect(self.display_size, colours[ColourType.black], [self.corner, self.dimensions], 5)
-        if self.letter == Move.right_prime or self.letter == Move.left or self.letter == Move.turn_down:
+        if self.letter == Move.right_prime or self.letter == Move.left or self.letter == Move.turn_x_prime:
             pygame.draw.polygon(self.display_size, colours[ColourType.black],
                                 ((corner_x + width // 4, corner_y),
                                  (corner_x + width * 3 // 4, corner_y),
@@ -30,7 +30,7 @@ class Square:
                                  (corner_x, corner_y + height * 2 // 3),
                                  (corner_x + width // 4,
                                   corner_y + height * 2 // 3)))
-        if self.letter == Move.up_prime or self.letter == Move.down or self.letter == Move.turn_right:
+        if self.letter == Move.up_prime or self.letter == Move.down or self.letter == Move.turn_y:
             pygame.draw.polygon(self.display_size, colours[ColourType.black],
                                 ((corner_x, corner_y + height // 4),
                                  (corner_x, corner_y + height * 3 // 4),
@@ -41,7 +41,7 @@ class Square:
                                  (corner_x + width * 2 // 3, corner_y),
                                  (corner_x + width * 2 // 3,
                                   corner_y + height // 4)))
-        if self.letter == Move.up or self.letter == Move.down_prime or self.letter == Move.turn_left:
+        if self.letter == Move.up or self.letter == Move.down_prime or self.letter == Move.turn_y_prime:
             pygame.draw.polygon(self.display_size, colours[ColourType.black],
                                 ((corner_x + width, corner_y + height // 4),
                                  (corner_x + width, corner_y + height * 3 // 4),
@@ -51,7 +51,7 @@ class Square:
                                  (corner_x, corner_y + height // 2),
                                  (corner_x + width // 3, corner_y),
                                  (corner_x + width // 3, corner_y + height // 4)))
-        if self.letter == Move.right or self.letter == Move.left_prime or self.letter == Move.turn_up:
+        if self.letter == Move.right or self.letter == Move.left_prime or self.letter == Move.turn_x:
             pygame.draw.polygon(self.display_size, colours[ColourType.black],
                                 ((corner_x + width // 4, corner_y + height),
                                  (corner_x + width * 3 // 4, corner_y + height),
