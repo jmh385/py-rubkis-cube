@@ -89,11 +89,11 @@ def colours_on_side(cube: Cube) -> List[Move]:
     if cube.sides[2][4] == ColourType.white and cube.sides[4][4] == ColourType.yellow:
         return moves
     for i in range(4):
-        cube.turn_x()
+        moves.extend(cube.turn_x())
         if cube.sides[2][4] == ColourType.white and cube.sides[4][4] == ColourType.yellow:
             return moves
     for i in range(4):
-        cube.turn_y_prime()
+        moves.extend(cube.turn_y_prime())
         if cube.sides[2][4] == ColourType.white and cube.sides[4][4] == ColourType.yellow:
             return moves
     raise CubeException(cube, "could not align colours to the main band")
@@ -111,8 +111,9 @@ def is_right_aligned(cube: Cube) -> bool:
             and cube.sides[1][4] == cube.sides[1][3])
 
 
-def is_combo_solved(cube: Cube, edge_combo: Tuple[ColourType, ColourType]) -> bool:
+def is_combo_solved(cube: Cube, edge_combo: Tuple[ColourType, ColourType]) -> Tuple[bool, List[Move]]:
     is_solved = False
+    moves = []
     for _ in range(4):
         are_colours_correct = all(colour in edge_combo for colour in [cube.sides[0][4],
                                                                       cube.sides[0][3],
@@ -122,8 +123,8 @@ def is_combo_solved(cube: Cube, edge_combo: Tuple[ColourType, ColourType]) -> bo
                               and cube.sides[3][4] == cube.sides[3][5])
         if are_colours_correct and are_edges_matching:
             is_solved = True
-        cube.turn_y()
-    return is_solved
+        moves.extend(cube.turn_y())
+    return is_solved, moves
 
 
 def is_left_edge_backwards(cube: Cube, edge_combo: Tuple[ColourType, ColourType]) -> bool:
@@ -167,7 +168,9 @@ def extract_edge(cube: Cube,
 def solve_side_edges(cube: Cube) -> List[Move]:
     moves: List[Move] = []
     for edge_combo in edge_combos:
-        if is_combo_solved(cube, edge_combo):
+        is_combo_solve, combo_moves = is_combo_solved(cube, edge_combo)
+        moves.extend(combo_moves)
+        if is_combo_solve:
             continue
         moves.extend(extract_edge(cube, edge_combo))
         moves.extend(align_bottom_edge(cube, edge_combo))

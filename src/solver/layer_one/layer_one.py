@@ -15,5 +15,4 @@ def layer_one(real_cube: Cube, debug: bool = False) -> List[Move]:
     moves.extend(align_sides(cube))
     moves.extend(white_cross(cube))
     moves.extend(white_corners(cube))
-    print(moves)
-    return moves if not debug else []
+    return moves

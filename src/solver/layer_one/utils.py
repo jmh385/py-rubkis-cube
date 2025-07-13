@@ -17,13 +17,11 @@ def white_side_up(cube: Cube) -> List[Move]:
     if cube.sides[0][4] == ColourType.white:
         return moves
     for i in range(4):
-        cube.turn_y()
-        moves.append(Move.turn_y_prime)
+        moves.extend(cube.turn_y())
         if cube.sides[0][4] == ColourType.white:
             return moves
     for i in range(4):
-        cube.turn_x_prime()
-        moves.append(Move.turn_x_prime)
+        moves.extend(cube.turn_x_prime())
         if cube.sides[0][4] == ColourType.white:
             return moves
     raise CubeException(cube, "White side could not be found")
@@ -42,8 +40,7 @@ def align_sides(cube: Cube) -> List[Move]:
         return moves
 
     for i in range(4):
-        cube.turn_z()
-        moves.append(Move.turn_z)
+        moves.extend(cube.turn_z())
         if check_alignment(cube):
             return moves
     raise CubeException(cube, "could not align sides")
