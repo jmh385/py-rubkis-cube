@@ -93,7 +93,6 @@ def detect_edge_with_white_not_on_back(cube: Cube, side_data: SideData) -> Optio
 
              or (cube.sides[edge_face_2_side][edge_face_2_index] == ColourType.white
                  and cube.sides[edge_face_1_side][edge_face_1_index] == side_data.colour_type)))
-    print(possible_edges)
     res = None
     for i in range(4):
         for possible_edge in possible_edges:
@@ -110,7 +109,6 @@ def detect_edge_with_white_not_on_back(cube: Cube, side_data: SideData) -> Optio
 def edge_with_white_not_on_back_solve(cube: Cube, side_data: SideData) -> List[Move]:
     moves: List[Move] = []
     not_on_back_side = detect_edge_with_white_not_on_back(cube, side_data)
-    print(f"bad side: {not_on_back_side}")
     # print(cube.sides[2][4])
     moves.extend(cube.turn_z(not_on_back_side.turns_from_top))
     freeing_moves = turn_front_until_free_over_top(cube)
@@ -223,7 +221,6 @@ def white_cross(cube: Cube) -> List[Move]:
         moves.extend(generate_most_matching(cube))
     for side_data in side_order:
         if is_colour_is_aligned(cube, side_data):
-            print(f"color {side_data} is aligned")
             continue
         else:
             # white side edges

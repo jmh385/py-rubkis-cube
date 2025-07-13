@@ -225,8 +225,6 @@ class Cube:
             letter = list(self.functions.keys())[random.randint(0, len(self.functions) - 7)]
             self.functions[letter]()
             count += 1
-            print(self)
-        print(count)
 
     def __str__(self) -> str:
         ret = ""

@@ -20,9 +20,7 @@ class TestLayerTwo(unittest.TestCase):
             cube.randomise()
             layer_one(cube, True)
             layer_two(cube, True)
-            print(f"cube before:\n{cube.sides}")
             layer_three(cube, True)
-            print(f"cube after:\n{cube}")
             print(i)
             self.assertTrue(cube_is_solved(cube))
 

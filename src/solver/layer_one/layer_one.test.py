@@ -103,9 +103,7 @@ class TestLayerOne(unittest.TestCase):
         for i in range(test_count):
             cube = Cube()
             cube.randomise()
-            print(f"before:\n{cube.sides}")
             layer_one(cube, True)
-            print(f"after: \n{cube.sides}")
             self.assertTrue(all(colour == ColourType.white for colour in cube.sides[0]))
             self.assertTrue(all(colour == ColourType.blue for colour in cube.sides[1][0:7:3]))
             self.assertTrue(all(colour == ColourType.orange for colour in cube.sides[2][6:9]))
