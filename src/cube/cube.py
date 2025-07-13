@@ -21,7 +21,7 @@ class Cube:
                                                 Move.back: self.back, Move.back_prime: self.back_prime,
                                                 Move.front: self.front, Move.front_prime: self.front_prime,
                                                 Move.turn_x: self.turn_x, Move.turn_x_prime: self.turn_x_prime,
-                                                Move.turn_y: self.turn_y_prime, Move.turn_y_prime: self.turn_y,
+                                                Move.turn_y: self.turn_y, Move.turn_y_prime: self.turn_y_prime,
                                                 Move.turn_z: self.turn_z,
                                                 Move.turn_z_prime: self.turn_z_prime}
 
@@ -152,11 +152,11 @@ class Cube:
             ret_lst[3:6] = self.sides[4][1:8:3]
             ret_lst[6:] = self.sides[4][0:7:3]
             self.sides[4] = ret_lst[:]
-        return [Move.turn_y_prime] * times
+        return [Move.turn_y] * times
 
     def turn_y_prime(self, times: int = 1) -> List[Move]:
         self.turn_y(3 * times)
-        return [Move.turn_y] * times
+        return [Move.turn_y_prime] * times
 
     def turn_x(self, times: int = 1) -> List[Move]:
         self.turn_x_prime(3 * times)
