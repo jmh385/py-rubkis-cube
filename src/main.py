@@ -1,3 +1,5 @@
+import sys, os
+
 import argparse
 import time
 from copy import deepcopy
@@ -11,6 +13,15 @@ from solver.solve_cube import solve_cube
 from state_save import state_save
 from ui.draw_cube import draw_cube
 from ui.square import Square, Direction
+
+def resource_path(relative_path):
+    """Get absolute path to resource, works for dev and for PyInstaller bundle"""
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
+img_path = resource_path("assets\save-image.jpg")
+
 
 parser = argparse.ArgumentParser()
 parser.add_argument("--move_wait_time", help="time between solution moves in seconds")
@@ -30,7 +41,7 @@ start_time = time.time()
 elapsed = 0
 flag = False
 
-save_icon = pygame.image.load("./assets/save-image.jpg").convert_alpha()
+save_icon = pygame.image.load(img_path).convert_alpha()
 
 
 square_lst.append(
