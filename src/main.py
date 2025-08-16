@@ -1,15 +1,21 @@
+import argparse
 import time
 from copy import deepcopy
 from typing import List
 
 import pygame
 
-from common.move_enum import Move
+from common.color_type_enum import ColourType
 from cube.cube import Cube
-from setup import setup_sides
 from solver.solve_cube import solve_cube
+from state_save import state_save
 from ui.draw_cube import draw_cube
-from ui.square import Square
+from ui.square import Square, Direction
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--move_wait_time", help="time between solution moves in seconds")
+
+args = parser.parse_args()
 
 square_lst: List[Square] = []
 pygame.init()
@@ -24,28 +30,71 @@ start_time = time.time()
 elapsed = 0
 flag = False
 
-square_lst.append(Square([display_length // 2 - 180, display_height // 2 - 65], [60, 30], display_size, Move.up))
-square_lst.append(
-    Square([display_length // 2 - 180, display_height // 2 + 38], [60, 30], display_size, Move.down_prime))
-square_lst.append(Square([display_length // 2 + 121, display_height // 2 - 65], [60, 30], display_size, Move.up_prime))
-square_lst.append(Square([display_length // 2 + 121, display_height // 2 + 38], [60, 30], display_size, Move.down))
-square_lst.append(Square([display_length // 2 + 40, display_height // 2 - 180], [30, 60], display_size, Move.right))
-square_lst.append(
-    Square([display_length // 2 - 65, display_height // 2 - 180], [30, 60], display_size, Move.left_prime))
-square_lst.append(
-    Square([display_length // 2 + 40, display_height // 2 + 120], [30, 60], display_size, Move.right_prime))
-square_lst.append(Square([display_length // 2 - 65, display_height // 2 + 120], [30, 60], display_size, Move.left))
-square_lst.append(Square([0, 0], [30, 60], display_size, Move.front))
-square_lst.append(Square([0, 400], [30, 60], display_size, Move.turn_z))
-square_lst.append(Square([1000, 400], [30, 60], display_size, Move.turn_z_prime))
+save_icon = pygame.image.load("./assets/save-image.jpg").convert_alpha()
 
-square_lst.append(Square([0, 500], [30, 60], display_size, Move.back))
-square_lst.append(Square([50, display_height // 2 - 30], [60, 60], display_size, Move.turn_y_prime))
-square_lst.append(Square([956, display_height // 2 - 30], [60, 60], display_size, Move.turn_y))
-square_lst.append(Square([625, 50], [60, 60], display_size, Move.turn_x))
-square_lst.append(Square([380, 590], [60, 60], display_size, Move.turn_x_prime))
 
-TIME_BETWEEN_MOVES_SECONDS = 0.1
+square_lst.append(
+    Square([display_length // 2 - 180, display_height // 2 + 38], [60, 30], display_size, lambda: cube.down_prime(),
+           Direction.right))
+square_lst.append(
+    Square([display_length // 2 - 180, display_height // 2 - 65], [60, 30], display_size, lambda: cube.up(),
+           Direction.right))
+square_lst.append(
+    Square([50, display_height // 2 - 30], [60, 60], display_size, lambda: cube.turn_y_prime(), Direction.right))
+
+square_lst.append(
+    Square([display_length // 2 + 121, display_height // 2 - 65], [60, 30], display_size, lambda: cube.up_prime(),
+           Direction.left))
+square_lst.append(
+    Square([display_length // 2 + 121, display_height // 2 + 38], [60, 30], display_size, lambda: cube.down(),
+           Direction.left))
+square_lst.append(
+    Square([956, display_height // 2 - 30], [60, 60], display_size, lambda: cube.turn_y(), Direction.left))
+square_lst.append(
+    Square([display_length // 2 - 65, display_height // 2 - 180], [30, 60], display_size, lambda: cube.left_prime(),
+           Direction.up))
+square_lst.append(
+    Square([display_length // 2 + 40, display_height // 2 - 180], [30, 60], display_size, lambda: cube.right(),
+           Direction.up))
+square_lst.append(Square([625, 50], [60, 60], display_size, lambda: cube.turn_x(), Direction.up))
+square_lst.append(
+    Square([display_length // 2 + 40, display_height // 2 + 120], [30, 60], display_size, lambda: cube.right_prime(),
+           Direction.down))
+square_lst.append(
+    Square([display_length // 2 - 65, display_height // 2 + 120], [30, 60], display_size, lambda: cube.left(),
+           Direction.down))
+square_lst.append(
+    Square([display_length // 2 + 200, display_height // 2 + 85], [30, 60], display_size, lambda: cube.front(),
+           Direction.down))
+square_lst.append(
+    Square([display_length // 2 - 225, display_height // 2 + 85], [30, 60], display_size, lambda: cube.front_prime(),
+           Direction.down))
+square_lst.append(
+    Square([display_length // 2 + 300, display_height // 2 + 85], [30, 60], display_size, lambda: cube.back_prime(),
+           Direction.down))
+square_lst.append(
+    Square([display_length // 2 - 325, display_height // 2 + 85], [30, 60], display_size, lambda: cube.back(),
+           Direction.down))
+square_lst.append(Square([380, 590], [60, 60], display_size, lambda: cube.turn_x_prime(), Direction.down))
+
+square_lst.append(
+    Square([display_length // 2 + 235, display_height // 2 - 150], [60, 60], display_size, lambda: cube.turn_z(),
+           Direction.up))
+square_lst.append(
+    Square([display_length // 2 - 290, display_height // 2 - 150], [60, 60], display_size, lambda: cube.turn_z_prime(),
+           Direction.up))
+
+
+def set_state_save(state: List[List[ColourType]], new_state: List[List[ColourType]]):
+    state.clear()
+    state.extend(new_state)
+
+
+square_lst.append(Square([display_length - 120, 50], [60, 60], display_size,
+                         lambda: set_state_save(state_save, deepcopy(cube.sides)), image=save_icon))
+
+
+TIME_BETWEEN_MOVES_SECONDS = float(args.move_wait_time) if args.move_wait_time else 0.1
 move_timestamp = time.time()
 moves = []
 current_move = -1
@@ -64,7 +113,7 @@ while True:
                 [width, height] = square.dimensions
                 if (corner_x + width >= mouse_pos_x >= corner_x) and (
                         corner_y + height >= mouse_pos_y >= corner_y):
-                    cube.movement_parser(square.letter)
+                    square.function()
         if event.type == pygame.KEYUP:
             if event.key == pygame.K_TAB:
                 cube.randomise()
@@ -73,7 +122,7 @@ while True:
                 moves = deepcopy(solve_cube(cube, False))
                 current_move = 0
             elif event.key == pygame.K_LALT:
-                cube.sides = deepcopy(setup_sides)
+                cube.sides = deepcopy(state_save)
     elapsed = round(time.time() - start_time, 3)
     for square in square_lst:
         square.draw()
